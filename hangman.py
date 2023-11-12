@@ -2,12 +2,13 @@ from random import randint
 
 def choose_category():
     """Allow the user to choose a category from which the word should be picked"""
+    print("Welcome to Hangman!")
     print("Choose a category from which the word should be picked:")
     print("1. Birds and animals")
     print("2. Colors")
     print("3. Fruits and vegetables")
     print("4. Car brands")
-    category = int(input("Enter your choice (1/2/3): ").strip())
+    category = int(input("Enter your choice (1/2/3/4): ").strip())
     while category < 1 or category > 4:
         print("Please enter an integer from 1 to 4.")
         category = int(input("Enter your choice (1/2/3/4): ").strip())   
@@ -88,6 +89,9 @@ def guess_word(word, partial_word, hidden_chars_indexes, hidden_chars):
             print("Incorrect!")
         
         print(f"{attempts} attempts remaining.")
+    else:
+        print(f"Sorry, you are out of attempts. The word was \"{word}\".")
+
 
 if __name__ == '__main__':
     choice_list = choose_category()
