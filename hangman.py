@@ -27,7 +27,6 @@ def choose_category():
 def pick_word(choice_list):
     """Pick a random word"""
     word = choice_list[randint(0, len(choice_list) - 1)]
-    print(f"Word is {word}")
     return word
 
 def reveal_chars(word):
@@ -49,6 +48,7 @@ def reveal_chars(word):
         else:
             partial_word.append('_')
     
+    print(f"Your word is {partial_word}")
 
     hidden_chars_indexes = [i for i in range(len(partial_word)) if partial_word[i] == '_']
     hidden_chars = [word[i] for i in hidden_chars_indexes]
@@ -57,7 +57,12 @@ def reveal_chars(word):
 
 def guess_word(word, partial_word, hidden_chars_indexes, hidden_chars):
     """Ask the user to guess the word"""
-    attempts = partial_word.count('_') + 3  # 3 extra attempts
+    missing = partial_word.count('_')
+    if missing == 1:
+        attempts = 2
+    else:
+        attempts = missing + 2
+
     print(f"Guess the word now! You have {attempts} attempts.")
     while attempts > 0:
         guess = input("Guess a character: ").strip().lower()
@@ -83,7 +88,7 @@ def guess_word(word, partial_word, hidden_chars_indexes, hidden_chars):
             if partial_word.count('_') > 0:
                 print(f"Correct! Word is now {partial_word}")
             if partial_word == word:
-                print(f"You guessed the word correctly with {attempts} attempts remaining. The word was \"{word}\".")
+                print(f"You guessed the word correctly with {attempts} attempt(s) remaining. The word was \"{word}\".")
                 break
         else:
             print("Incorrect!")
@@ -92,10 +97,8 @@ def guess_word(word, partial_word, hidden_chars_indexes, hidden_chars):
     else:
         print(f"Sorry, you are out of attempts. The word was \"{word}\".")
 
-
 if __name__ == '__main__':
     choice_list = choose_category()
     word = pick_word(choice_list)
     partial_word, hidden_chars_indexes, hidden_chars = reveal_chars(word)
-    print(f"Your word is {partial_word}")
     guess_word(word, partial_word, hidden_chars_indexes, hidden_chars)
