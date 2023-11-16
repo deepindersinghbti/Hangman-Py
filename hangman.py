@@ -48,7 +48,7 @@ def reveal_chars(word):
         else:
             partial_word.append('_')
     
-    print(f"Your word is {partial_word}")
+    print(f"Your word is {''.join(partial_word)}")
 
     hidden_chars_indexes = [i for i in range(len(partial_word)) if partial_word[i] == '_']
     hidden_chars = [word[i] for i in hidden_chars_indexes]
@@ -58,10 +58,7 @@ def reveal_chars(word):
 def guess_word(word, partial_word, hidden_chars_indexes, hidden_chars):
     """Ask the user to guess the word"""
     missing = partial_word.count('_')
-    if missing == 1:
-        attempts = 2
-    else:
-        attempts = missing + 2
+    attempts = int(missing * 1.5) if missing % 2 == 0 else int((missing // 2) + 1)
 
     print(f"Guess the word now! You have {attempts} attempts.")
     while attempts > 0:
@@ -87,7 +84,7 @@ def guess_word(word, partial_word, hidden_chars_indexes, hidden_chars):
         if correct:
             if partial_word.count('_') > 0:
                 print(f"Correct! Word is now {partial_word}")
-            if partial_word == word:
+            if partial_word.count('_') == 0:
                 print(f"You guessed the word correctly with {attempts} attempt(s) remaining. The word was \"{word}\".")
                 break
         else:
