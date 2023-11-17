@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, choice
 
 def choose_category():
     """Allow the user to choose a category from which the word should be picked"""
@@ -26,7 +26,7 @@ def choose_category():
 
 def pick_word(choice_list):
     """Pick a random word"""
-    word = choice_list[randint(0, len(choice_list) - 1)]
+    word = choice(choice_list)
     return word
 
 def reveal_chars(word):
@@ -61,12 +61,17 @@ def guess_word(word, partial_word, hidden_chars_indexes, hidden_chars):
     attempts = int(missing * 1.5) if missing % 2 == 0 else int((missing // 2) + 1)
 
     print(f"Guess the word now! You have {attempts} attempts.")
+    incorrect = []
     while attempts > 0:
         guess = input("Guess a character: ").strip().lower()
         while len(guess) != 1:
             print("Please enter a single character.")
             guess = input("Guess a character: ").strip()
         
+        while guess in incorrect:
+            print("You have already guessed this character. Please guess another character.")
+            guess = input("Guess a character: ").strip().lower()
+
         for i in range(len(word)):
             if word[i].lower() == guess and i in hidden_chars_indexes:
                 correct = True
@@ -78,6 +83,9 @@ def guess_word(word, partial_word, hidden_chars_indexes, hidden_chars):
                 hidden_chars.pop(char_index)
                 break
         else:
+            if guess not in incorrect:
+                incorrect.append(guess)
+            
             correct = False
             attempts -= 1
 
