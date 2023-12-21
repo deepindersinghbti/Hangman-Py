@@ -1,6 +1,11 @@
 from random import randint, choice
+try:
+    import requests
+    moduleFound = True
+except:
+    moduleFound = False
 
-def choose_category():
+def choose_word(moduleFound):
     """Allow the user to choose a category from which the word should be picked"""
     print("Welcome to Hangman!")
     print("Choose a category from which the word should be picked:")
@@ -8,11 +13,25 @@ def choose_category():
     print("2. Colors")
     print("3. Fruits and vegetables")
     print("4. Car brands")
-    category = int(input("Enter your choice (1/2/3/4): ").strip())
-    while category < 1 or category > 4:
-        print("Please enter an integer from 1 to 4.")
-        category = int(input("Enter your choice (1/2/3/4): ").strip())   
-    
+    if moduleFound:
+        print("5. Any random word")
+
+    if moduleFound:
+        while True:
+            category = int(input("Enter your choice (1/2/3/4/5): ").strip())
+            if category >= 1 and category <= 5:
+                break
+            else:
+                print("Please enter an integer from 1 to 5.")
+    else:
+        while True:
+            category = int(input("Enter your choice (1/2/3/4): ").strip())
+            if category >= 1 and category <= 4:
+                break
+            else:
+                print("Please enter an integer from 1 to 4.")
+
+
     if category == 1:
         choice_list = ["Cat", "Dog", "Horse", "Lion", "Elephant", "Giraffe", "Eagle", "Peacock", "Dolphin", "Kangaroo"]
     elif category == 2:
@@ -22,11 +41,15 @@ def choose_category():
     elif category == 4:
         choice_list = ["Toyota", "Honda", "Lamborghini", "Chevrolet", "Jaguar", "Porsche", "Audi", "Volkswagen", "Tesla", "Nissan"]
     
-    return choice_list
-
-def pick_word(choice_list):
-    """Pick a random word"""
-    word = choice(choice_list)
+    if category >= 1 and category <= 4:
+        word = choice(choice_list)
+    elif category == 5:
+        # Fetch random word
+        url = "https://random-word-api.herokuapp.com/word?number=1"
+        response = requests.get(url)
+        words = response.json()
+        word = choice(words)
+ 
     return word
 
 def reveal_chars(word):
@@ -103,7 +126,6 @@ def guess_word(word, partial_word, hidden_chars_indexes, hidden_chars):
         print(f"Sorry, you are out of attempts. The word was \"{word}\".")
 
 if __name__ == '__main__':
-    choice_list = choose_category()
-    word = pick_word(choice_list)
+    word = choose_word(moduleFound)
     partial_word, hidden_chars_indexes, hidden_chars = reveal_chars(word)
     guess_word(word, partial_word, hidden_chars_indexes, hidden_chars)
