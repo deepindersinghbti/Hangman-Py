@@ -2,7 +2,7 @@ from random import randint, choice
 try:
     import requests
     moduleFound = True
-except:
+except ImportError:
     moduleFound = False
 
 def choose_word(moduleFound):
@@ -126,6 +126,11 @@ def guess_word(word, partial_word, hidden_chars_indexes, hidden_chars):
         print(f"Sorry, you are out of attempts. The word was \"{word}\".")
 
 if __name__ == '__main__':
-    word = choose_word(moduleFound)
-    partial_word, hidden_chars_indexes, hidden_chars = reveal_chars(word)
-    guess_word(word, partial_word, hidden_chars_indexes, hidden_chars)
+    while True:
+        word = choose_word(moduleFound)
+        partial_word, hidden_chars_indexes, hidden_chars = reveal_chars(word)
+        guess_word(word, partial_word, hidden_chars_indexes, hidden_chars)
+        replay = int(input("Enter 0 to replay or 1 to exit: "))
+        if replay == 1:
+            print("Thank you for playing!")
+            break
