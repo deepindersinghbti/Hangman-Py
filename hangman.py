@@ -78,7 +78,7 @@ def reveal_chars(word):
     
     return ''.join(partial_word), hidden_chars_indexes, hidden_chars
 
-def guess_word(word, partial_word, hidden_chars_indexes, hidden_chars):
+def guess_word(word, partial_word, hidden_chars_indexes, hidden_chars, won):
     """Ask the user to guess the word"""
     missing = partial_word.count('_')
     attempts = int(missing * 1.5) if missing % 2 == 0 else int((missing // 2) + 1)
@@ -117,6 +117,7 @@ def guess_word(word, partial_word, hidden_chars_indexes, hidden_chars):
                 print(f"Correct! Word is now {partial_word}")
             if partial_word.count('_') == 0:
                 print(f"You guessed the word correctly with {attempts} attempt(s) remaining. The word was \"{word}\".")
+                won += 1
                 break
         else:
             print("Incorrect!")
@@ -124,13 +125,21 @@ def guess_word(word, partial_word, hidden_chars_indexes, hidden_chars):
         print(f"{attempts} attempts remaining.")
     else:
         print(f"Sorry, you are out of attempts. The word was \"{word}\".")
+    
+    return won
 
 if __name__ == '__main__':
+    played = 1
+    won = 0
     while True:
         word = choose_word(moduleFound)
         partial_word, hidden_chars_indexes, hidden_chars = reveal_chars(word)
-        guess_word(word, partial_word, hidden_chars_indexes, hidden_chars)
+        won = guess_word(word, partial_word, hidden_chars_indexes, hidden_chars, won)
         replay = int(input("Enter 0 to replay or 1 to exit: "))
+
         if replay == 1:
             print("Thank you for playing!")
+            print(f"You won {won} out of  {played} games.")
             break
+        else:
+            played += 1
